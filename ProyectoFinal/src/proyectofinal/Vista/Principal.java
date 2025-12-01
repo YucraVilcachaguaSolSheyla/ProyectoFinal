@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 import proyectofinal.Controlador.ControladorOrdenes;
+import proyectofinal.Controlador.ControladorOrdenes.ExcepcionProcesamientoDatos;
 
 /**
  *
@@ -73,5 +74,87 @@ public class Principal {
             System.out.println("\n--- Proceso finalizado. ---");
         }
     }
+        public static void mostrarMenuReportes(ControladorOrdenes controlador, Scanner scanner) {
+        int opcion = -1;
+        
+       
+        while (opcion != 0) {
+            
+            System.out.println("------------------------------------------------");
+            System.out.println("         MEN DE REPORTES ");
+            System.out.println("------------------------------------------------");
+            System.out.println("1. Reporte anual (Monto total y productos)");
+            System.out.println("2. Reporte productos comprados por categoria");
+            System.out.println("3. Reporte monto total por metodo de pago");
+            System.out.println("4. Reporte conteo de ordenes por estado");
+            System.out.println("5. Reporte monto total por ciudad de entrega");
+            System.out.println("6. Reporte conteo de ordenes por proveedor");
+            System.out.println("7. Reporte anual por año fiscal "); 
+            System.out.println("0. Salir del sistema");
+            System.out.println("------------------------------------------------");
+            System.out.print("Seleccione una opcion: ");
+            
+          
+            String entrada = scanner.nextLine();
+            
+            try {
+               
+                opcion = Integer.parseInt(entrada);
+
+               
+                switch (opcion) {
+                    case 1:
+                        controlador.generarReporteAnual(NOMBRE_ARCHIVO_DATOS);
+                        break;
+                    case 2:
+                        controlador.generarReportePorCategoria(NOMBRE_ARCHIVO_DATOS);
+                        break;
+                    case 3:
+                        controlador.generarReportePorMetodoPago(NOMBRE_ARCHIVO_DATOS);
+                        break;
+                    case 4:
+                        controlador.generarReportePorEstado(NOMBRE_ARCHIVO_DATOS);
+                        break;
+                    case 5:
+                        controlador.generarReportePorCiudad(NOMBRE_ARCHIVO_DATOS);
+                        break;
+                    case 6:
+                        controlador.generarReportePorProveedor(NOMBRE_ARCHIVO_DATOS);
+                        break;
+                    case 7: 
+                        System.out.print("Ingrese el Año Fiscal a consultar (ej: 2025): ");
+                        String añoStr = scanner.nextLine();
+                        int añoFiltro = Integer.parseInt(añoStr.trim());
+                        controlador.generarReportePorAñoFiscal(NOMBRE_ARCHIVO_DATOS, añoFiltro);
+                        break;
+                    case 0:
+                        System.out.println("\nCerrando sesion y saliendo del sistema...");
+                        break;
+                    default:
+                     
+                        System.out.println("Opcion invalida. Por favor, ingrese un numero del 0 al 7"); 
+                        break;
+                }
+            
+          
+            } catch (ExcepcionProcesamientoDatos e) {
+                 System.out.println("\n\n ERROR CRITICO DURANTE EL REPORTE:");
+                 System.out.println("Mensaje: " + e.getMessage());
+                 if (e.esCritico()) {
+                     System.out.println("Tipo: ERROR FATAL. La ejecucion del programa se detiene.");
+                     opcion = 0; 
+                 }
+          
+            } catch (NumberFormatException e) {
+              
+                System.out.println("Entrada invalida. Por favor, ingrese un numero");
+                opcion = -1;
+            }
+        };
+        }
+
+}
+    
+    
 
 
